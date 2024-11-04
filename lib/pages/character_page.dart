@@ -20,6 +20,7 @@ class _CharacterPageState extends State<CharacterPage> {
     Character(name: 'Xiangling', rarity: 4, imagePath: 'images/Icon_Paimon_Menu.png'),
     Character(name: 'Xingqiu', rarity: 4, imagePath: 'images/Icon_Paimon_Menu.png'),
   ];
+  
 
   int _selectedIndex = 0;
 
