@@ -16,12 +16,13 @@ class CharacterDetailPage extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 300.0,
             pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
+            /*flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
-                'assets/images/${character.id}.png', // Ajusta el path de la imagen según tu organización
+                //'assets/images/${character.id}.png', 
+                'assets/images/Icon_Paimon_Menu.png',
                 fit: BoxFit.cover,
               ),
-            ),
+            ),*/
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -38,10 +39,10 @@ class CharacterDetailPage extends StatelessWidget {
                   Center(
                     child: Column(
                       children: [
-                        CircleAvatar(
+                        /*CircleAvatar(
                           backgroundImage: AssetImage('assets/images/${character.id}.png'),
                           radius: 30.0,
-                        ),
+                        ),*/
                         const SizedBox(height: 8.0),
                         Text(
                           character.name,

@@ -41,7 +41,7 @@ class _CharacterListState extends State<CharacterList> {
                 color: Colors.grey[800],
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 child: ListTile(
-                  leading: Image.asset('assets/images/${character.id}.png'), // Ajusta el path de las imágenes
+                  //leading: Image.asset('assets/images/${character.id}.png'),
                   title: Text(
                     character.name,
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
