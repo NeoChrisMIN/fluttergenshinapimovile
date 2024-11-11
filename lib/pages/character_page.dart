@@ -1,8 +1,9 @@
 // lib/pages/character_page.dart
 
 import 'package:flutter/material.dart';
-import '../widgets/character_list.dart';
 import '../models/character_model.dart';
+import '../widgets/character_list.dart';
+import '../services/api_service.dart';
 import 'artifact_page.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -12,17 +13,16 @@ class CharacterPage extends StatefulWidget {
 }
 
 class _CharacterPageState extends State<CharacterPage> {
-  final List<Character> characters = [
-    Character(name: 'Traveler', rarity: 5, imagePath: 'images/Icon_Paimon_Menu.png'),
-    Character(name: 'Keqing', rarity: 5, imagePath: 'images/Icon_Paimon_Menu.png'),
-    Character(name: 'Kaedehara Kazuha', rarity: 5, imagePath: 'images/Icon_Paimon_Menu.png'),
-    Character(name: 'Kamisato Ayato', rarity: 5, imagePath: 'images/Icon_Paimon_Menu.png'),
-    Character(name: 'Xiangling', rarity: 4, imagePath: 'images/Icon_Paimon_Menu.png'),
-    Character(name: 'Xingqiu', rarity: 4, imagePath: 'images/Icon_Paimon_Menu.png'),
-  ];
-  
+  final ApiService apiService = ApiService();
+  late Future<List<Character>> futureCharacters;
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    futureCharacters = apiService.fetchCharacters(); // Cargamos los personajes desde la API
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -35,21 +35,34 @@ class _CharacterPageState extends State<CharacterPage> {
     Widget currentPage;
     switch (_selectedIndex) {
       case 0:
-        currentPage = CharacterList(characters: characters);
+        currentPage = FutureBuilder<List<Character>>(
+          future: futureCharacters,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            } else if (snapshot.hasData) {
+              return CharacterList(characters: snapshot.data!);
+            } else {
+              return Center(child: Text("No se encontraron personajes"));
+            }
+          },
+        );
         break;
       case 1:
         currentPage = ArtifactPage();
         break;
       default:
-        throw UnimplementedError('No widget for $_selectedIndex');
+        throw UnimplementedError('No widget para $_selectedIndex');
     }
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0), // Ajusta la altura según necesites
+        preferredSize: const Size.fromHeight(60.0),
         child: ClipRRect(
           borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20), // Redondeo en las esquinas inferiores
+            bottom: Radius.circular(20),
           ),
           child: AppBar(
             leading: Padding(

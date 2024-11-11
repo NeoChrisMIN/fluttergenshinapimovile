@@ -17,7 +17,10 @@ class CharacterDetailPage extends StatelessWidget {
             expandedHeight: 300.0,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(character.imagePath, fit: BoxFit.cover),
+              background: Image.asset(
+                'assets/images/${character.id}.png', // Ajusta el path de la imagen según tu organización
+                fit: BoxFit.cover,
+              ),
             ),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -36,7 +39,7 @@ class CharacterDetailPage extends StatelessWidget {
                     child: Column(
                       children: [
                         CircleAvatar(
-                          backgroundImage: AssetImage(character.imagePath),
+                          backgroundImage: AssetImage('assets/images/${character.id}.png'),
                           radius: 30.0,
                         ),
                         const SizedBox(height: 8.0),
@@ -45,14 +48,23 @@ class CharacterDetailPage extends StatelessWidget {
                           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'The Traveler', // Subtítulo de ejemplo
+                          character.title, // Muestra el título del personaje
                           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  // Más detalles aquí si es necesario
+                  Text(
+                    character.description,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    'Rarity: ${character.rarity}',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  // Agrega más detalles según sea necesario
                 ],
               ),
             ),
