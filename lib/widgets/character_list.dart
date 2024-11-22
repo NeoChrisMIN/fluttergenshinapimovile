@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../models/character_model.dart';
 import '../services/api_service.dart';
@@ -7,9 +8,10 @@ class CharacterList extends StatefulWidget {
   const CharacterList({super.key, required List<Character> characters});
 
   @override
-  // ignore: library_private_types_in_public_api
   _CharacterListState createState() => _CharacterListState();
 }
+
+//final baseUrl = "http://192.168.100.30:8000/storage/images/characters/albedo/icon-big.png";
 
 class _CharacterListState extends State<CharacterList> {
   final ApiService apiService = ApiService();
@@ -20,6 +22,7 @@ class _CharacterListState extends State<CharacterList> {
     super.initState();
     futureCharacters = apiService.fetchCharacters();
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +40,15 @@ class _CharacterListState extends State<CharacterList> {
             itemCount: characters.length,
             itemBuilder: (context, index) {
               final character = characters[index];
+
               return Card(
                 color: Colors.grey[800],
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 child: ListTile(
-                  //leading: Image.asset('assets/images/${character.id}.png'),
+                  //leading: SizedBox(width: 20,height: 20, child: Scaffold(body: Image.network(baseUrl),backgroundColor: Colors.black12,),),
+                  leading: SizedBox(width: 50, height: 50, child: character.iconBig.isNotEmpty
+                      ? Image.network(character.iconBig, width: 50, height: 50, fit: BoxFit.cover)
+                      : Icon(Icons.image_not_supported, color: Colors.grey),),
                   title: Text(
                     character.name,
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

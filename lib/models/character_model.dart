@@ -1,3 +1,4 @@
+
 class Character {
   final String id;
   final String name;
@@ -12,6 +13,8 @@ class Character {
   final String constellation;
   final String birthday;
   final String description;
+  final String card;
+  final String iconBig;
 
   Character({
     required this.id,
@@ -27,6 +30,8 @@ class Character {
     this.constellation = 'Unknown',
     this.birthday = 'Unknown',
     this.description = 'No description available',
+    this.card = '',
+    this.iconBig = '',
   });
 
   // Factory constructor para crear un objeto Character desde JSON
@@ -45,6 +50,8 @@ class Character {
       constellation: json['constellation'] ?? 'Unknown',
       birthday: json['birthday'] ?? 'Unknown',
       description: json['description'] ?? 'No description available',
+      card: json['card'] ?? '',
+      iconBig: json['icon_big'] ?? '',
     );
   }
 }

@@ -1,4 +1,3 @@
-// lib/pages/character_detail_page.dart
 
 import 'package:flutter/material.dart';
 import '../models/character_model.dart';
@@ -10,19 +9,20 @@ class CharacterDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardImageUrl = character.card;
+    final cardImageUrlIcon = character.iconBig;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 300.0,
             pinned: true,
-            /*flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                //'assets/images/${character.id}.png', 
-                'assets/images/Icon_Paimon_Menu.png',
-                fit: BoxFit.cover,
-              ),
-            ),*/
+            flexibleSpace: FlexibleSpaceBar(
+              background: cardImageUrl.isNotEmpty
+                  ? Image.network(cardImageUrl, fit: BoxFit.cover)
+                  : Container(color: Colors.grey, child: Center(child: Icon(Icons.image_not_supported, size: 50))),
+            ),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -39,10 +39,15 @@ class CharacterDetailPage extends StatelessWidget {
                   Center(
                     child: Column(
                       children: [
-                        /*CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/${character.id}.png'),
+                        CircleAvatar(
+                          backgroundImage: cardImageUrlIcon.isNotEmpty
+                              ? NetworkImage(cardImageUrlIcon)
+                              : NetworkImage(cardImageUrlIcon),
                           radius: 30.0,
-                        ),*/
+                          child: cardImageUrlIcon.isEmpty
+                              ? Icon(Icons.person, size: 30)
+                              : null,
+                        ),
                         const SizedBox(height: 8.0),
                         Text(
                           character.name,
