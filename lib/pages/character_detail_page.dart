@@ -28,13 +28,15 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
       appBar: AppBar(
         title: Text(
           characterData.name,
-          style: TextStyle(color: Colors.white), // Nombre en color blanco
+          style: const TextStyle(color: Colors.white), // Nombre en color blanco
         ),
-        iconTheme: IconThemeData(color: Colors.white), // Flecha en color blanco
+        iconTheme:
+            const IconThemeData(color: Colors.white), // Flecha en color blanco
         backgroundColor: Colors.transparent, // Fondo transparente
         elevation: 0,
       ),
-      extendBodyBehindAppBar: true, // Para que el AppBar quede sobre el contenido
+      extendBodyBehindAppBar:
+          true, // Para que el AppBar quede sobre el contenido
       body: Stack(
         children: [
           // Imagen de fondo
@@ -73,37 +75,45 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                                 NetworkImage(url + characterData.iconBig),
                             radius: 30,
                           ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                characterData.name,
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              if (characterData.title != null)
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                 Text(
-                                  characterData.title!,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[700],
+                                  characterData.name,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
+                                  maxLines: 2, // Limitar a 2 líneas
+                                  overflow:
+                                      TextOverflow.ellipsis, // Mostrar "..."
                                 ),
-                            ],
+                                if (characterData.title != null)
+                                  Text(
+                                    characterData.title!,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[700],
+                                    ),
+                                    maxLines: 2, // Limitar a 2 líneas
+                                    overflow:
+                                        TextOverflow.ellipsis, // Mostrar "..."
+                                  ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       buildDetailText('Vision', characterData.vision),
                       buildDetailText('Weapon', characterData.weapon),
                       buildDetailText('Nation', characterData.nation),
                       buildDetailText('Affiliation', characterData.affiliation),
                       buildDetailText(
-                          'Rarity', characterData.rarity?.toString()),
+                          'Rarity', characterData.rarity.toString()),
                       buildDetailText(
                           'Constellations', characterData.constellation),
                       buildDetailText('Birthday', characterData.birthday),
@@ -120,12 +130,12 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   }
 
   Widget buildDetailText(String label, String? value) {
-    if (value == null || value.isEmpty) return SizedBox.shrink();
+    if (value == null || value.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Text(
         '$label: $value',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
           color: Colors.black87,
         ),

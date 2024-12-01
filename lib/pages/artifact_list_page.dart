@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import '../models/character_model.dart';
+import '../models/artifact_model.dart';
 import '../services/api_service.dart';
-import '../pages/character_detail_page.dart';
+import 'artifact_detail_page.dart';
 import '../utils/utils.dart';
 
-class CharacterList extends StatefulWidget {
+class ArtifactListPage extends StatefulWidget {
   @override
-  _CharacterListState createState() => _CharacterListState();
+  _ArtifactListPageState createState() => _ArtifactListPageState();
 }
 
 final url = '$urlBaseGlobal';
 
-class _CharacterListState extends State<CharacterList> {
+class _ArtifactListPageState extends State<ArtifactListPage> {
   final ApiService apiService = ApiService();
   final ScrollController _scrollController = ScrollController();
 
-  List<Character> characters = [];
+  List<Artifact> artifacts = [];
   int currentPage = 1;
   bool isLoading = false;
   bool hasMore = true;
@@ -23,7 +23,7 @@ class _CharacterListState extends State<CharacterList> {
   @override
   void initState() {
     super.initState();
-    _fetchCharacters();
+    _fetchArtifacts();
     _scrollController.addListener(_onScroll);
   }
 
@@ -33,7 +33,7 @@ class _CharacterListState extends State<CharacterList> {
     super.dispose();
   }
 
-  Future<void> _fetchCharacters() async {
+  Future<void> _fetchArtifacts() async {
     if (isLoading || !hasMore) return;
 
     setState(() {
@@ -41,18 +41,19 @@ class _CharacterListState extends State<CharacterList> {
     });
 
     try {
-      final newCharacters = await apiService.fetchCharactersPaginated(
-        page: currentPage,
-        perPage: 10,
-      );
+      final newArtifacts = await apiService.fetchArtifactsPaginated(
+          page: currentPage, perPage: 10);
       setState(() {
-        characters.addAll(newCharacters);
+        artifacts.addAll(newArtifacts);
         currentPage++;
-        if (newCharacters.isEmpty) {
+        if (newArtifacts.isEmpty) {
           hasMore = false;
         }
       });
     } catch (error) {
+      setState(() {
+        hasMore = false;
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error: $error')));
     } finally {
@@ -66,24 +67,24 @@ class _CharacterListState extends State<CharacterList> {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
         hasMore) {
-      _fetchCharacters();
+      _fetchArtifacts();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: characters.isEmpty && isLoading
+      body: artifacts.isEmpty && isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(8),
-              itemCount: characters.length + (hasMore ? 1 : 0),
+              itemCount: artifacts.length + (hasMore ? 1 : 0),
               itemBuilder: (context, index) {
-                if (index == characters.length) {
+                if (index == artifacts.length) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                final character = characters[index];
+                final artifact = artifacts[index];
                 return Card(
                   color: Colors.grey[800],
                   margin: const EdgeInsets.symmetric(vertical: 6),
@@ -91,9 +92,9 @@ class _CharacterListState extends State<CharacterList> {
                     leading: SizedBox(
                       width: 50,
                       height: 50,
-                      child: character.iconBig.isNotEmpty
+                      child: artifact.imagePath != null
                           ? Image.network(
-                              url + character.iconBig,
+                              url + artifact.imagePath!,
                               width: 50,
                               height: 50,
                               fit: BoxFit.cover,
@@ -102,12 +103,12 @@ class _CharacterListState extends State<CharacterList> {
                               color: Colors.grey),
                     ),
                     title: Text(
-                      character.name,
+                      artifact.name,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Rarity ${character.rarity}',
+                      'Max Rarity: ${artifact.maxRarity}',
                       style: const TextStyle(color: Colors.white70),
                     ),
                     onTap: () {
@@ -115,7 +116,7 @@ class _CharacterListState extends State<CharacterList> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              CharacterDetailPage(character: character),
+                              ArtifactDetailPage(artifact: artifact),
                         ),
                       );
                     },

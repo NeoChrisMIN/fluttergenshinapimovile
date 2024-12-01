@@ -1,18 +1,16 @@
-// lib/pages/character_page.dart
-
 import 'package:flutter/material.dart';
 import '../models/character_model.dart';
 import '../widgets/character_list.dart';
 import '../services/api_service.dart';
-import 'artifact_page.dart';
+import 'artifact_list_page.dart';
 
-class CharacterPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
   // ignore: library_private_types_in_public_api
-  _CharacterPageState createState() => _CharacterPageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _CharacterPageState extends State<CharacterPage> {
+class _HomePageState extends State<HomePage> {
   final ApiService apiService = ApiService();
   late Future<List<Character>> futureCharacters;
 
@@ -34,25 +32,29 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   Widget build(BuildContext context) {
     Widget currentPage;
+    String appBarTitle;
+
     switch (_selectedIndex) {
       case 0:
+        appBarTitle = 'Character Database';
         currentPage = FutureBuilder<List<Character>>(
           future: futureCharacters,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text("Error: ${snapshot.error}"));
             } else if (snapshot.hasData) {
-              return CharacterList(characters: snapshot.data!);
+              return CharacterList();
             } else {
-              return Center(child: Text("No se encontraron personajes"));
+              return const Center(child: Text("No se encontraron personajes"));
             }
           },
         );
         break;
       case 1:
-        currentPage = ArtifactPage();
+        appBarTitle = 'Artifact Database';
+        currentPage = ArtifactListPage();
         break;
       default:
         throw UnimplementedError('No widget para $_selectedIndex');
@@ -62,7 +64,7 @@ class _CharacterPageState extends State<CharacterPage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60.0),
         child: ClipRRect(
-          borderRadius: BorderRadius.vertical(
+          borderRadius: const BorderRadius.vertical(
             bottom: Radius.circular(20),
           ),
           child: AppBar(
@@ -74,9 +76,9 @@ class _CharacterPageState extends State<CharacterPage> {
                 height: 30,
               ),
             ),
-            title: const Text(
-              'Character Database',
-              style: TextStyle(color: Colors.white),
+            title: Text(
+              appBarTitle,
+              style: const TextStyle(color: Colors.white),
             ),
             centerTitle: true,
             backgroundColor: Colors.black87,

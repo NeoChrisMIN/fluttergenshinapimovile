@@ -1,4 +1,3 @@
-
 class Character {
   final String id;
   final String name;
@@ -53,5 +52,11 @@ class Character {
       card: json['card'] ?? '',
       iconBig: json['icon_big'] ?? '',
     );
+  }
+
+  // Método para procesar un listado paginado
+  static List<Character> fromPaginatedJson(Map<String, dynamic> json) {
+    final List<dynamic> characterData = json['data'] ?? [];
+    return characterData.map((item) => Character.fromJson(item)).toList();
   }
 }

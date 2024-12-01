@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/character_page.dart';
+import 'pages/home_page.dart';
 
 void main() {
   runApp(GenshinWikiApp());
@@ -13,7 +13,7 @@ class GenshinWikiApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: CharacterPage(),
+      home: HomePage(),
     );
   }
 }
