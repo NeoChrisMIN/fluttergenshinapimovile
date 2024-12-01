@@ -17,24 +17,11 @@ class ApiService {
     }
   }
 
-  // Obtener una lista paginada de personajes
-  Future<List<Character>> fetchCharactersPaginated({int page = 1, int perPage = 10}) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/characters/paginate?page=$page&per_page=$perPage'),
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      return Character.fromPaginatedJson(data);
-    } else {
-      throw Exception('Error al obtener los personajes paginados: ${response.statusCode}');
-    }
-  }
-
-  Future<List<Character>> searchCharactersPaginated({
-    required String query,
+  // Obtener una lista paginada de personajes con búsqueda
+  Future<List<Character>> fetchCharactersPaginated({
     int page = 1,
     int perPage = 10,
+    String query = '',
   }) async {
     final response = await http.get(
       Uri.parse('$baseUrl/characters/paginate?page=$page&per_page=$perPage&search=$query'),
@@ -45,7 +32,7 @@ class ApiService {
       final List<dynamic> characters = data['data'];
       return characters.map((character) => Character.fromJson(character)).toList();
     } else {
-      throw Exception('Error al buscar personajes: ${response.statusCode}');
+      throw Exception('Error al obtener los personajes: ${response.statusCode}');
     }
   }
 
@@ -64,19 +51,24 @@ class ApiService {
   }
 
   // Obtener una lista paginada de artefactos
-  Future<List<Artifact>> fetchArtifactsPaginated({int page = 1, int perPage = 10}) async {
+  Future<List<Artifact>> fetchArtifactsPaginated({
+    int page = 1,
+    int perPage = 10,
+    String query = '',
+  }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/artifacts/paginate?page=$page&per_page=$perPage'),
+      Uri.parse('$baseUrl/artifacts/paginate?page=$page&per_page=$perPage&search=$query'),
     );
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> artifacts = data['data']; // Laravel devuelve los datos paginados en "data"
+      final List<dynamic> artifacts = data['data'];
       return artifacts.map((artifact) => Artifact.fromJson(artifact)).toList();
     } else {
-      throw Exception('Error al obtener los artefactos paginados: ${response.statusCode}');
+      throw Exception('Error al obtener los artefactos: ${response.statusCode}');
     }
   }
+
 
     // Obtener todos los artefactos
   Future<List<Artifact>> fetchArtifacts() async {

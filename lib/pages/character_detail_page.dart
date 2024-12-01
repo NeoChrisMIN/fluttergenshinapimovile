@@ -15,6 +15,7 @@ final url = '$urlBaseGlobal';
 
 class _CharacterDetailPageState extends State<CharacterDetailPage> {
   late Character characterData;
+  double currentChildSize = 0.4; // Tamaño actual de la tarjeta
 
   @override
   void initState() {
@@ -28,11 +29,14 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
       appBar: AppBar(
         title: Text(
           characterData.name,
-          style: const TextStyle(color: Colors.white), // Nombre en color blanco
+          style: TextStyle(
+            color: currentChildSize > 0.4 ? Colors.white : Colors.black,
+          ),
         ),
-        iconTheme:
-            const IconThemeData(color: Colors.white), // Flecha en color blanco
-        backgroundColor: Colors.transparent, // Fondo transparente
+        iconTheme: IconThemeData(
+          color: currentChildSize > 0.4 ? Colors.white : Colors.black,
+        ),
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       extendBodyBehindAppBar:
@@ -46,83 +50,101 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
               fit: BoxFit.cover,
             ),
           ),
-          // Superposición oscura para legibilidad
+          // Superposición oscura para legibilidad, dinámica según el tamaño
           Positioned.fill(
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              color:
+                  Colors.black.withOpacity(currentChildSize > 0.4 ? 0.5 : 0.0),
             ),
           ),
-          // Tarjeta de detalles del personaje
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: Colors.white.withOpacity(0.8), // Semi-transparente
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(url + characterData.iconBig),
-                            radius: 30,
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  characterData.name,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2, // Limitar a 2 líneas
-                                  overflow:
-                                      TextOverflow.ellipsis, // Mostrar "..."
-                                ),
-                                if (characterData.title != null)
-                                  Text(
-                                    characterData.title!,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey[700],
-                                    ),
-                                    maxLines: 2, // Limitar a 2 líneas
-                                    overflow:
-                                        TextOverflow.ellipsis, // Mostrar "..."
-                                  ),
-                              ],
+          // Detalle deslizable
+          DraggableScrollableSheet(
+            initialChildSize: 0.4, // Tamaño inicial de la tarjeta
+            minChildSize: 0.2, // Tamaño mínimo al deslizar hacia abajo
+            maxChildSize: 0.85, // Tamaño máximo al deslizar hacia arriba
+            builder: (context, scrollController) {
+              return NotificationListener<DraggableScrollableNotification>(
+                onNotification: (notification) {
+                  setState(() {
+                    currentChildSize = notification.extent;
+                  });
+                  return true;
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white
+                        .withOpacity(0.9), // Fondo semi-transparente
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(url + characterData.iconBig),
+                              radius: 30,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      buildDetailText('Vision', characterData.vision),
-                      buildDetailText('Weapon', characterData.weapon),
-                      buildDetailText('Nation', characterData.nation),
-                      buildDetailText('Affiliation', characterData.affiliation),
-                      buildDetailText(
-                          'Rarity', characterData.rarity.toString()),
-                      buildDetailText(
-                          'Constellations', characterData.constellation),
-                      buildDetailText('Birthday', characterData.birthday),
-                      buildDetailText('Description', characterData.description),
-                    ],
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    characterData.name,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  if (characterData.title != null)
+                                    Text(
+                                      characterData.title!,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey[700],
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        _buildSectionTitle("Details"),
+                        buildDetailText('Vision', characterData.vision),
+                        buildDetailText('Weapon', characterData.weapon),
+                        buildDetailText('Nation', characterData.nation),
+                        buildDetailText(
+                            'Affiliation', characterData.affiliation),
+                        buildDetailText(
+                            'Rarity', characterData.rarity.toString()),
+                        const SizedBox(height: 10),
+                        _buildSectionTitle("Additional Info"),
+                        buildDetailText(
+                            'Constellations', characterData.constellation),
+                        buildDetailText('Birthday', characterData.birthday),
+                        buildDetailText(
+                            'Description', characterData.description),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ],
       ),
@@ -133,11 +155,33 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(fontSize: 16, color: Colors.black87),
+          children: [
+            TextSpan(
+              text: '$label: ',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: value,
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
-        '$label: $value',
+        title,
         style: const TextStyle(
-          fontSize: 16,
-          color: Colors.black87,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline,
         ),
       ),
     );

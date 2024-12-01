@@ -4,20 +4,31 @@ import '../utils/utils.dart';
 
 final url = '$urlBaseGlobal';
 
-class ArtifactDetailPage extends StatelessWidget {
+class ArtifactDetailPage extends StatefulWidget {
   final Artifact artifact;
 
   ArtifactDetailPage({required this.artifact});
+
+  @override
+  _ArtifactDetailPageState createState() => _ArtifactDetailPageState();
+}
+
+class _ArtifactDetailPageState extends State<ArtifactDetailPage> {
+  double currentChildSize = 0.4; // Tamaño inicial de la tarjeta
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          artifact.name,
-          style: const TextStyle(color: Colors.white),
+          widget.artifact.name,
+          style: TextStyle(
+            color: currentChildSize > 0.4 ? Colors.white : Colors.black,
+          ),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(
+          color: currentChildSize > 0.4 ? Colors.white : Colors.black,
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -26,9 +37,9 @@ class ArtifactDetailPage extends StatelessWidget {
         children: [
           // Imagen de fondo del artefacto
           Positioned.fill(
-            child: artifact.imagePath != null
+            child: widget.artifact.imagePath != null
                 ? Image.network(
-                    url + artifact.imagePath!,
+                    url + widget.artifact.imagePath!,
                     fit: BoxFit.cover,
                   )
                 : Container(
@@ -42,32 +53,43 @@ class ArtifactDetailPage extends StatelessWidget {
                     ),
                   ),
           ),
-          // Superposición oscura para mejorar legibilidad
+          // Superposición oscura dinámica para mejorar la legibilidad
           Positioned.fill(
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              color:
+                  Colors.black.withOpacity(currentChildSize > 0.4 ? 0.5 : 0.0),
             ),
           ),
-          // Detalles del artefacto
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: Colors.white.withOpacity(0.9),
+          // Tarjeta deslizable con detalles del artefacto
+          DraggableScrollableSheet(
+            initialChildSize: 0.4,
+            minChildSize: 0.2,
+            maxChildSize: 0.85,
+            builder: (context, scrollController) {
+              return NotificationListener<DraggableScrollableNotification>(
+                onNotification: (notification) {
+                  setState(() {
+                    currentChildSize = notification.extent;
+                  });
+                  return true;
+                },
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
                   child: SingleChildScrollView(
+                    controller: scrollController,
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Nombre del artefacto
                         Text(
-                          artifact.name,
+                          widget.artifact.name,
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -77,7 +99,7 @@ class ArtifactDetailPage extends StatelessWidget {
                         const SizedBox(height: 8),
                         // Rareza máxima
                         Text(
-                          'Max Rarity: ${artifact.maxRarity}',
+                          'Max Rarity: ${widget.artifact.maxRarity}',
                           style: const TextStyle(
                             fontSize: 18,
                             color: Colors.grey,
@@ -85,20 +107,20 @@ class ArtifactDetailPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         // Bonificación de 2 piezas
-                        if (artifact.twoPieceBonus != null)
+                        if (widget.artifact.twoPieceBonus != null)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Text(
-                              '2-Piece Bonus: ${artifact.twoPieceBonus}',
+                              '2-Piece Bonus: ${widget.artifact.twoPieceBonus}',
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
                         // Bonificación de 4 piezas
-                        if (artifact.fourPieceBonus != null)
+                        if (widget.artifact.fourPieceBonus != null)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Text(
-                              '4-Piece Bonus: ${artifact.fourPieceBonus}',
+                              '4-Piece Bonus: ${widget.artifact.fourPieceBonus}',
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
@@ -106,8 +128,8 @@ class ArtifactDetailPage extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ],
       ),
