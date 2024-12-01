@@ -21,7 +21,8 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   void initState() {
     super.initState();
-    futureCharacters = apiService.fetchCharacters(); // Cargamos los personajes desde la API
+    futureCharacters =
+        apiService.fetchCharacters(); // Cargamos los personajes desde la API
   }
 
   void _onItemTapped(int index) {
