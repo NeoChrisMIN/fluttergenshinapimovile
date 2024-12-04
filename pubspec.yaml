@@ -50,7 +50,7 @@ dev_dependencies:
   flutter_lints: ^4.0.0
 
 flutter_native_splash:
-  color: "#1cb3d9" # Color de fondo
+  color: "#3F88C5" # Color de fondo
   image: images/logo.png # Ruta a tu logo
   android: true
   ios: true
@@ -60,7 +60,7 @@ flutter_native_splash:
 
   android_12:
     image: images/logo.png 
-    icon_background_color: "#1cb3d9"
+    icon_background_color: "#3F88C5"
     android_gravity: center
 
 # For information on the generic Dart part of this file, see the
@@ -78,6 +78,7 @@ flutter:
   assets:
      - images/Icon_Paimon_Menu.png
      - images/System_Battle_Pass.png
+     - images/fondo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

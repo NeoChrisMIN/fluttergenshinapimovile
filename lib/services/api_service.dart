@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/character_model.dart';
 import '../models/artifact_model.dart';
+import '../utils/utils.dart';
+
 
 class ApiService {
-  final String baseUrl =  "http://192.168.100.216:80/api";//"http://10.0.2.2:80/api";
+  final baseUrl = '$urlBaseGlobal' +"/api";
 
   Future<List<Character>> fetchCharacters() async {
     final response = await http.get(Uri.parse('$baseUrl/characters'));

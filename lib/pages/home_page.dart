@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/character_model.dart';
 import '../widgets/character_list.dart';
 import '../services/api_service.dart';
-import 'artifact_list_page.dart';
+import '../widgets/artifact_list_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -64,9 +64,6 @@ class _HomePageState extends State<HomePage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60.0),
         child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(
-            bottom: Radius.circular(20),
-          ),
           child: AppBar(
             leading: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),

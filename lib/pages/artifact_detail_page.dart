@@ -19,22 +19,23 @@ class _ArtifactDetailPageState extends State<ArtifactDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(
-          widget.artifact.name,
-          style: TextStyle(
-            color: currentChildSize > 0.4 ? Colors.white : Colors.black,
-          ),
-        ),
         iconTheme: IconThemeData(
-          color: currentChildSize > 0.4 ? Colors.white : Colors.black,
+          color: Colors.white,
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
+          // Imagen de fondo global
+          Positioned.fill(
+            child: Image.asset(
+              'images/fondo.png', // Imagen de fondo
+              fit: BoxFit.cover,
+            ),
+          ),
           // Imagen de fondo del artefacto
           Positioned.fill(
             child: widget.artifact.imagePath != null
@@ -53,15 +54,15 @@ class _ArtifactDetailPageState extends State<ArtifactDetailPage> {
                     ),
                   ),
           ),
-          // Superposición oscura dinámica para mejorar la legibilidad
+          // Superposición oscura para legibilidad
           Positioned.fill(
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              color:
-                  Colors.black.withOpacity(currentChildSize > 0.4 ? 0.5 : 0.0),
+              color: Colors.black
+                  .withOpacity(currentChildSize > 0.4 ? 0.5 : 0.0), // Dinámico
             ),
           ),
-          // Tarjeta deslizable con detalles del artefacto
+          // Detalles deslizable
           DraggableScrollableSheet(
             initialChildSize: 0.4,
             minChildSize: 0.2,
@@ -76,7 +77,8 @@ class _ArtifactDetailPageState extends State<ArtifactDetailPage> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white
+                        .withOpacity(0.9), // Fondo semi-transparente
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
@@ -87,7 +89,6 @@ class _ArtifactDetailPageState extends State<ArtifactDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Nombre del artefacto
                         Text(
                           widget.artifact.name,
                           style: const TextStyle(
@@ -95,35 +96,18 @@ class _ArtifactDetailPageState extends State<ArtifactDetailPage> {
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 8),
-                        // Rareza máxima
-                        Text(
-                          'Max Rarity: ${widget.artifact.maxRarity}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        // Bonificación de 2 piezas
+                        const SizedBox(height: 10),
+                        buildDetailText(
+                            'Max Rarity', widget.artifact.maxRarity.toString()),
                         if (widget.artifact.twoPieceBonus != null)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              '2-Piece Bonus: ${widget.artifact.twoPieceBonus}',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        // Bonificación de 4 piezas
+                          buildDetailText(
+                              '2-Piece Bonus', widget.artifact.twoPieceBonus!),
                         if (widget.artifact.fourPieceBonus != null)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              '4-Piece Bonus: ${widget.artifact.fourPieceBonus}',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ),
+                          buildDetailText(
+                              '4-Piece Bonus', widget.artifact.fourPieceBonus!),
                       ],
                     ),
                   ),
@@ -132,6 +116,27 @@ class _ArtifactDetailPageState extends State<ArtifactDetailPage> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildDetailText(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(fontSize: 16, color: Colors.black87),
+          children: [
+            TextSpan(
+              text: '$label: ',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: value,
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+          ],
+        ),
       ),
     );
   }

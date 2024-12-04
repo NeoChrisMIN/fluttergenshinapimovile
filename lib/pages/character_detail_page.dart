@@ -27,12 +27,6 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          characterData.name,
-          style: TextStyle(
-            color: currentChildSize > 0.4 ? Colors.white : Colors.black,
-          ),
-        ),
         iconTheme: IconThemeData(
           color: currentChildSize > 0.4 ? Colors.white : Colors.black,
         ),

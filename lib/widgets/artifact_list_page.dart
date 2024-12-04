@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import '../models/character_model.dart';
+import '../models/artifact_model.dart';
 import '../services/api_service.dart';
-import '../pages/character_detail_page.dart';
+import '../pages/artifact_detail_page.dart';
 import '../utils/utils.dart';
 
-class CharacterList extends StatefulWidget {
+class ArtifactListPage extends StatefulWidget {
   @override
-  _CharacterListState createState() => _CharacterListState();
+  _ArtifactListPageState createState() => _ArtifactListPageState();
 }
 
 final url = '$urlBaseGlobal';
 
-class _CharacterListState extends State<CharacterList> {
+class _ArtifactListPageState extends State<ArtifactListPage> {
   final ApiService apiService = ApiService();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
-  List<Character> characters = [];
+  List<Artifact> artifacts = [];
   String searchQuery = '';
   int currentPage = 1;
   bool isLoading = false;
@@ -25,12 +25,12 @@ class _CharacterListState extends State<CharacterList> {
   @override
   void initState() {
     super.initState();
-    _fetchCharacters();
+    _fetchArtifacts();
     _scrollController.addListener(_onScroll);
     _searchController.addListener(() {
       setState(() {
         searchQuery = _searchController.text;
-        _resetAndFetchCharacters();
+        _resetAndFetchArtifacts();
       });
     });
   }
@@ -42,16 +42,16 @@ class _CharacterListState extends State<CharacterList> {
     super.dispose();
   }
 
-  void _resetAndFetchCharacters() {
+  void _resetAndFetchArtifacts() {
     setState(() {
-      characters.clear();
+      artifacts.clear();
       currentPage = 1;
       hasMore = true;
     });
-    _fetchCharacters();
+    _fetchArtifacts();
   }
 
-  Future<void> _fetchCharacters() async {
+  Future<void> _fetchArtifacts() async {
     if (isLoading || !hasMore) return;
 
     setState(() {
@@ -59,15 +59,15 @@ class _CharacterListState extends State<CharacterList> {
     });
 
     try {
-      final newCharacters = await apiService.fetchCharactersPaginated(
+      final newArtifacts = await apiService.fetchArtifactsPaginated(
         query: searchQuery,
         page: currentPage,
         perPage: 10,
       );
       setState(() {
-        characters.addAll(newCharacters);
+        artifacts.addAll(newArtifacts);
         currentPage++;
-        if (newCharacters.isEmpty) {
+        if (newArtifacts.isEmpty) {
           hasMore = false;
         }
       });
@@ -85,7 +85,7 @@ class _CharacterListState extends State<CharacterList> {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
         hasMore) {
-      _fetchCharacters();
+      _fetchArtifacts();
     }
   }
 
@@ -97,7 +97,7 @@ class _CharacterListState extends State<CharacterList> {
           // Imagen de fondo
           Positioned.fill(
             child: Image.asset(
-              'images/fondo.png',
+              'images/fondo.png', // Ruta de tu imagen de fondo
               fit: BoxFit.cover,
             ),
           ),
@@ -127,18 +127,18 @@ class _CharacterListState extends State<CharacterList> {
                   ),
                 ),
               ),
-              // Lista de personajes
+              // Lista de artefactos
               Expanded(
-                child: characters.isEmpty && isLoading
+                child: artifacts.isEmpty && isLoading
                     ? const Center(
                         child: CircularProgressIndicator(
                           color: Colors.black, // Indicador de carga negro
                         ),
                       )
-                    : characters.isEmpty
+                    : artifacts.isEmpty
                         ? const Center(
                             child: Text(
-                              'No characters found',
+                              'No artifacts found',
                               style: TextStyle(
                                 color: Colors.white, // Texto blanco
                                 fontSize: 18,
@@ -148,16 +148,16 @@ class _CharacterListState extends State<CharacterList> {
                         : ListView.builder(
                             controller: _scrollController,
                             padding: const EdgeInsets.all(8),
-                            itemCount: characters.length + (hasMore ? 1 : 0),
+                            itemCount: artifacts.length + (hasMore ? 1 : 0),
                             itemBuilder: (context, index) {
-                              if (index == characters.length) {
+                              if (index == artifacts.length) {
                                 return const Center(
                                     child: CircularProgressIndicator(
                                   color:
                                       Colors.black, // Indicador de carga negro
                                 ));
                               }
-                              final character = characters[index];
+                              final artifact = artifacts[index];
                               return Card(
                                 color: Colors.grey[800]
                                     ?.withOpacity(0.8), // Transparencia
@@ -166,9 +166,9 @@ class _CharacterListState extends State<CharacterList> {
                                   leading: SizedBox(
                                     width: 50,
                                     height: 50,
-                                    child: character.iconBig.isNotEmpty
+                                    child: artifact.imagePath != null
                                         ? Image.network(
-                                            url + character.iconBig,
+                                            url + artifact.imagePath!,
                                             width: 50,
                                             height: 50,
                                             fit: BoxFit.cover,
@@ -177,13 +177,13 @@ class _CharacterListState extends State<CharacterList> {
                                             color: Colors.grey),
                                   ),
                                   title: Text(
-                                    character.name,
+                                    artifact.name,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   subtitle: Text(
-                                    'Rarity: ${character.rarity}',
+                                    'Max Rarity: ${artifact.maxRarity}',
                                     style:
                                         const TextStyle(color: Colors.white70),
                                   ),
@@ -192,8 +192,8 @@ class _CharacterListState extends State<CharacterList> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            CharacterDetailPage(
-                                                character: character),
+                                            ArtifactDetailPage(
+                                                artifact: artifact),
                                       ),
                                     );
                                   },
