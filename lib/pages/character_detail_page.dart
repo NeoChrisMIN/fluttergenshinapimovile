@@ -276,7 +276,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                   child: Column(
                     children: [
                       Text(
-                        "Team ID: ${team.id}",
+                        "Team: ${team.id}",
                         style: const TextStyle(
                           fontSize: 20,
                           color: Colors.white,
