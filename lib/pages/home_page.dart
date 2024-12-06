@@ -3,6 +3,7 @@ import '../models/character_model.dart';
 import '../widgets/character_list.dart';
 import '../services/api_service.dart';
 import '../widgets/artifact_list_page.dart';
+import '../widgets/weapon_list_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -56,6 +57,10 @@ class _HomePageState extends State<HomePage> {
         appBarTitle = 'Artifact Database';
         currentPage = ArtifactListPage();
         break;
+      case 2:
+        appBarTitle = 'Weapon Database';
+        currentPage = WeaponListPage();
+        break;
       default:
         throw UnimplementedError('No widget para $_selectedIndex');
     }
@@ -92,6 +97,7 @@ class _HomePageState extends State<HomePage> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Character'),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Artifacts'),
+          BottomNavigationBarItem(icon: Icon(Icons.shield), label: 'Weapons'),
         ],
       ),
     );

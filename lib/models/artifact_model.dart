@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Artifact {
   final String id;
   final String name;
@@ -20,9 +18,9 @@ class Artifact {
   // Crear un objeto Artifact desde JSON
   factory Artifact.fromJson(Map<String, dynamic> json) {
     return Artifact(
-      id: json['id'].toString(), // Forzar id como string
-      name: json['name'],
-      maxRarity: json['max_rarity'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      maxRarity: json['max_rarity'] ?? 0,
       twoPieceBonus: json['2_piece_bonus'],
       fourPieceBonus: json['4_piece_bonus'],
       imagePath: json['image_path'],

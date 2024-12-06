@@ -1,3 +1,5 @@
+import 'artifact_model.dart';
+
 class Character {
   final String id;
   final String name;
@@ -14,6 +16,7 @@ class Character {
   final String description;
   final String card;
   final String iconBig;
+  final List<Artifact> artifacts; // Lista de artefactos asociados
 
   Character({
     required this.id,
@@ -31,6 +34,7 @@ class Character {
     this.description = 'No description available',
     this.card = '',
     this.iconBig = '',
+    this.artifacts = const [], // Valor predeterminado: lista vacía
   });
 
   // Factory constructor para crear un objeto Character desde JSON
@@ -51,6 +55,10 @@ class Character {
       description: json['description'] ?? 'No description available',
       card: json['card'] ?? '',
       iconBig: json['icon_big'] ?? '',
+      artifacts: (json['artifacts'] as List<dynamic>?)
+              ?.map((artifactJson) => Artifact.fromJson(artifactJson))
+              .toList() ??
+          [], // Convierte los artefactos desde JSON
     );
   }
 
