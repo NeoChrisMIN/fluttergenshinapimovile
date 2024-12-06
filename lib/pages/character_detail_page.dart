@@ -21,7 +21,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   late Future<List<Team>> futureTeams;
   final ApiService apiService = ApiService();
 
-  double currentChildSize = 0.4; // Tamaño actual de la tarjeta
+  double currentChildSize = 0.4;
 
   @override
   void initState() {
@@ -40,8 +40,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      extendBodyBehindAppBar:
-          true, // Para que el AppBar quede sobre el contenido
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           // Imagen de fondo
@@ -51,7 +50,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
               fit: BoxFit.cover,
             ),
           ),
-          // Superposición oscura para legibilidad, dinámica según el tamaño
+          // Superposición oscura para legibilidad
           Positioned.fill(
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -61,9 +60,9 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
           ),
           // Detalle deslizable
           DraggableScrollableSheet(
-            initialChildSize: 0.4, // Tamaño inicial de la tarjeta
-            minChildSize: 0.2, // Tamaño mínimo al deslizar hacia abajo
-            maxChildSize: 0.85, // Tamaño máximo al deslizar hacia arriba
+            initialChildSize: 0.4,
+            minChildSize: 0.2,
+            maxChildSize: 0.85,
             builder: (context, scrollController) {
               return NotificationListener<DraggableScrollableNotification>(
                 onNotification: (notification) {
@@ -73,9 +72,10 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                   return true;
                 },
                 child: Container(
+                  margin:
+                      const EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
                   decoration: BoxDecoration(
-                    color: Colors.white
-                        .withOpacity(0.9), // Fondo semi-transparente
+                    color: Colors.black.withOpacity(0.8),
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
@@ -84,14 +84,22 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                     controller: scrollController,
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(url + characterData.iconBig),
-                              radius: 30,
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    url + characterData.iconBig,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
@@ -103,7 +111,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                                     style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -111,10 +119,10 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                                   if (characterData.title != null)
                                     Text(
                                       characterData.title!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontStyle: FontStyle.italic,
-                                        color: Colors.grey[700],
+                                        color: Colors.grey,
                                       ),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
@@ -133,10 +141,10 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                             'Affiliation', characterData.affiliation),
                         buildDetailText(
                             'Rarity', characterData.rarity.toString()),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         _buildSectionTitle("Artifacts"),
                         _buildArtifactsList(characterData.artifacts),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         _buildSectionTitle("Teams"),
                         _buildTeamsSection(),
                       ],
@@ -155,17 +163,30 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: RichText(
-        text: TextSpan(
-          style: const TextStyle(fontSize: 16, color: Colors.black87),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextSpan(
-              text: '$label: ',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              '$label:',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-            TextSpan(
-              text: value,
-              style: const TextStyle(fontWeight: FontWeight.normal),
+            Flexible(
+              child: Text(
+                value,
+                style: const TextStyle(fontSize: 16, color: Colors.white70),
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -174,14 +195,20 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   }
 
   Widget _buildSectionTitle(String title) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          decoration: TextDecoration.underline,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -191,7 +218,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
     if (artifacts.isEmpty) {
       return const Text(
         'No artifacts found.',
-        style: TextStyle(fontSize: 16, color: Colors.black87),
+        style: TextStyle(fontSize: 16, color: Colors.white),
       );
     }
 
@@ -211,7 +238,11 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                 ),
           title: Text(
             artifact.name,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white70,
+            ),
           ),
         );
       }).toList(),
@@ -232,25 +263,49 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Text(
             'No teams found.',
-            style: TextStyle(fontSize: 16, color: Colors.black87),
+            style: TextStyle(fontSize: 16, color: Colors.white),
           );
         } else {
           final teams = snapshot.data!;
           return Column(
             children: teams.map((team) {
               return Card(
+                color: Colors.black.withOpacity(0.6),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 10.0,
-                    runSpacing: 10.0,
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Column(
                     children: [
-                      _buildCharacterWithRole("Main DPS", team.mainDps),
-                      _buildCharacterWithRole("Sub DPS", team.subDps),
-                      _buildCharacterWithRole("Support", team.support),
-                      _buildCharacterWithRole(
-                          "Healer/Shielder", team.healerShielder),
+                      Text(
+                        "Team ID: ${team.id}",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10), // Reducido el espaciado
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight:
+                              220, // Ajusta la altura mínima para el GridView
+                          maxHeight: 300, // Altura máxima para evitar overflow
+                        ),
+                        child: GridView.count(
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          children: [
+                            _buildCharacterCard("Main DPS", team.mainDps),
+                            _buildCharacterCard("Sub DPS", team.subDps),
+                            _buildCharacterCard("Support", team.support),
+                            _buildCharacterCard(
+                                "Healer/Shielder", team.healerShielder),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -262,21 +317,46 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
     );
   }
 
-  Widget _buildCharacterWithRole(String role, Character character) {
+  Widget _buildCharacterCard(String role, Character character) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min, // Ajustar tamaño al contenido
       children: [
-        Text(
-          role,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
+        // Role Text
+        Card(
+          color: Colors.white.withOpacity(0.1), // Fondo oscuro translúcido
+          elevation: 2, // Pequeña sombra para diferenciarlo
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8), // Bordes redondeados
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0), // Espaciado interno
+            child: Text(
+              role,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Texto en blanco
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
-        const SizedBox(height: 5),
-        CircleAvatar(
-          radius: 30,
-          backgroundImage: NetworkImage(url + character.iconBig),
+        const SizedBox(height: 8),
+        // Character Image with background
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              url + character.iconBig,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ],
     );
