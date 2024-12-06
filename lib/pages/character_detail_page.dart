@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/character_model.dart';
+import '../models/artifact_model.dart';
 import '../utils/utils.dart';
 
 class CharacterDetailPage extends StatefulWidget {
@@ -127,12 +128,8 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                         buildDetailText(
                             'Rarity', characterData.rarity.toString()),
                         const SizedBox(height: 10),
-                        _buildSectionTitle("Additional Info"),
-                        buildDetailText(
-                            'Constellations', characterData.constellation),
-                        buildDetailText('Birthday', characterData.birthday),
-                        buildDetailText(
-                            'Description', characterData.description),
+                        _buildSectionTitle("Artifacts"),
+                        _buildArtifactsList(characterData.artifacts),
                       ],
                     ),
                   ),
@@ -178,6 +175,37 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
           decoration: TextDecoration.underline,
         ),
       ),
+    );
+  }
+
+  Widget _buildArtifactsList(List<Artifact> artifacts) {
+    if (artifacts.isEmpty) {
+      return const Text(
+        'No artifacts found.',
+        style: TextStyle(fontSize: 16, color: Colors.black87),
+      );
+    }
+
+    return Column(
+      children: artifacts.map((artifact) {
+        return ListTile(
+          leading: artifact.imagePath != null
+              ? Image.network(
+                  url + artifact.imagePath!,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                )
+              : const Icon(
+                  Icons.image_not_supported,
+                  color: Colors.grey,
+                ),
+          title: Text(
+            artifact.name,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        );
+      }).toList(),
     );
   }
 }
