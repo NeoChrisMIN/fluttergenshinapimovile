@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/character_model.dart';
 import '../models/artifact_model.dart';
+import '../models/team_model.dart';
+import '../services/api_service.dart';
 import '../utils/utils.dart';
 
 class CharacterDetailPage extends StatefulWidget {
@@ -16,12 +18,16 @@ final url = '$urlBaseGlobal';
 
 class _CharacterDetailPageState extends State<CharacterDetailPage> {
   late Character characterData;
+  late Future<List<Team>> futureTeams;
+  final ApiService apiService = ApiService();
+
   double currentChildSize = 0.4; // Tamaño actual de la tarjeta
 
   @override
   void initState() {
     super.initState();
     characterData = widget.character;
+    futureTeams = apiService.fetchTeamsByCharacter(characterData.id);
   }
 
   @override
@@ -130,6 +136,9 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                         const SizedBox(height: 10),
                         _buildSectionTitle("Artifacts"),
                         _buildArtifactsList(characterData.artifacts),
+                        const SizedBox(height: 10),
+                        _buildSectionTitle("Teams"),
+                        _buildTeamsSection(),
                       ],
                     ),
                   ),
@@ -206,6 +215,70 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildTeamsSection() {
+    return FutureBuilder<List<Team>>(
+      future: futureTeams,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Text(
+            "Error: ${snapshot.error}",
+            style: const TextStyle(color: Colors.red),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Text(
+            'No teams found.',
+            style: TextStyle(fontSize: 16, color: Colors.black87),
+          );
+        } else {
+          final teams = snapshot.data!;
+          return Column(
+            children: teams.map((team) {
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 10.0,
+                    runSpacing: 10.0,
+                    children: [
+                      _buildCharacterWithRole("Main DPS", team.mainDps),
+                      _buildCharacterWithRole("Sub DPS", team.subDps),
+                      _buildCharacterWithRole("Support", team.support),
+                      _buildCharacterWithRole(
+                          "Healer/Shielder", team.healerShielder),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildCharacterWithRole(String role, Character character) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          role,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 5),
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: NetworkImage(url + character.iconBig),
+        ),
+      ],
     );
   }
 }
