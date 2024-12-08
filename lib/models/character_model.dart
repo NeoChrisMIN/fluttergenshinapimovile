@@ -67,4 +67,26 @@ class Character {
     final List<dynamic> characterData = json['data'] ?? [];
     return characterData.map((item) => Character.fromJson(item)).toList();
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'title': title,
+      'vision': vision,
+      'weapon': weapon,
+      'gender': gender,
+      'nation': nation,
+      'affiliation': affiliation,
+      'rarity': rarity,
+      'release': release,
+      'constellation': constellation,
+      'birthday': birthday,
+      'description': description,
+      'card': card,
+      'icon_big': iconBig,
+      'artifacts': artifacts.map((artifact) => artifact.toJson()).toList(),
+    };
+  }
+
 }

@@ -28,4 +28,14 @@ class Team {
   static List<Team> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((json) => Team.fromJson(json)).toList();
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'main_dps': mainDps.toJson(),
+      'sub_dps': subDps.toJson(),
+      'support': support.toJson(),
+      'healer_shielder': healerShielder.toJson(),
+    };
+  }
 }
