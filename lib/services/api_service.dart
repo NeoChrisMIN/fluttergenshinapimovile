@@ -3,11 +3,11 @@ import 'package:http/http.dart' as http;
 import '../models/character_model.dart';
 import '../models/artifact_model.dart';
 import '../models/weapon_model.dart';
+import '../models/team_model.dart';
 import '../utils/utils.dart';
 
-
 class ApiService {
-  final baseUrl = '$urlBaseGlobal' +"/api";
+  final baseUrl = '$urlBaseGlobal' + "/api";
 
   Future<List<Character>> fetchCharacters() async {
     final response = await http.get(Uri.parse('$baseUrl/characters'));
@@ -27,21 +27,25 @@ class ApiService {
     String query = '',
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/characters/paginate?page=$page&per_page=$perPage&search=$query'),
+      Uri.parse(
+          '$baseUrl/characters/paginate?page=$page&per_page=$perPage&search=$query'),
     );
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final List<dynamic> characters = data['data'];
-      return characters.map((character) => Character.fromJson(character)).toList();
+      return characters
+          .map((character) => Character.fromJson(character))
+          .toList();
     } else {
-      throw Exception('Error al obtener los personajes: ${response.statusCode}');
+      throw Exception(
+          'Error al obtener los personajes: ${response.statusCode}');
     }
   }
 
   //----------------------------------------------------------------------------
 
-   // Obtener un artefacto específico por ID
+  // Obtener un artefacto específico por ID
   Future<Artifact> fetchArtifactById(String id) async {
     final response = await http.get(Uri.parse('$baseUrl/artifacts/$id'));
 
@@ -60,7 +64,8 @@ class ApiService {
     String query = '',
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/artifacts/paginate?page=$page&per_page=$perPage&search=$query'),
+      Uri.parse(
+          '$baseUrl/artifacts/paginate?page=$page&per_page=$perPage&search=$query'),
     );
 
     if (response.statusCode == 200) {
@@ -68,10 +73,10 @@ class ApiService {
       final List<dynamic> artifacts = data['data'];
       return artifacts.map((artifact) => Artifact.fromJson(artifact)).toList();
     } else {
-      throw Exception('Error al obtener los artefactos: ${response.statusCode}');
+      throw Exception(
+          'Error al obtener los artefactos: ${response.statusCode}');
     }
   }
-
 
   // Obtener todos los artefactos
   Future<List<Artifact>> fetchArtifacts() async {
@@ -81,10 +86,10 @@ class ApiService {
       final List<dynamic> data = json.decode(response.body);
       return data.map((artifact) => Artifact.fromJson(artifact)).toList();
     } else {
-      throw Exception('Error al obtener los artefactos: ${response.statusCode}');
+      throw Exception(
+          'Error al obtener los artefactos: ${response.statusCode}');
     }
   }
-
 
   // Obtener todas las armas
   Future<List<Weapon>> fetchWeapons() async {
@@ -124,10 +129,22 @@ class ApiService {
       final List<dynamic> weapons = data['data'];
       return weapons.map((weapon) => Weapon.fromJson(weapon)).toList();
     } else {
-      throw Exception('Error al obtener las armas paginadas: ${response.statusCode}');
+      throw Exception(
+          'Error al obtener las armas paginadas: ${response.statusCode}');
     }
   }
 
+  //Obtener los teams de un personaje en especifico
+  Future<List<Team>> fetchTeamsByCharacter(String characterName) async {
+    final response = await http.get(Uri.parse('$baseUrl/teams/$characterName'));
 
-  
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return Team.fromJsonList(data);
+    } else if (response.statusCode == 404) {
+      throw Exception('No teams found for the given character.');
+    } else {
+      throw Exception('Error al obtener los equipos: ${response.statusCode}');
+    }
+  }
 }
