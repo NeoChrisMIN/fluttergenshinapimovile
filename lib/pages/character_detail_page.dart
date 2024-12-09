@@ -14,7 +14,7 @@ class CharacterDetailPage extends StatefulWidget {
   _CharacterDetailPageState createState() => _CharacterDetailPageState();
 }
 
-final url = '$urlBaseGlobal';
+final url = '$urlBaseGlobal' + '/storage';
 
 class _CharacterDetailPageState extends State<CharacterDetailPage> {
   late Character characterData;

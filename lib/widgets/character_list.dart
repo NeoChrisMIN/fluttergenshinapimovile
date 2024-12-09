@@ -9,7 +9,7 @@ class CharacterList extends StatefulWidget {
   _CharacterListState createState() => _CharacterListState();
 }
 
-final url = '$urlBaseGlobal';
+final url = '$urlBaseGlobal' + '/storage';
 
 class _CharacterListState extends State<CharacterList> {
   final ApiService apiService = ApiService();

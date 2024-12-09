@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/weapon_model.dart';
 import '../utils/utils.dart';
 
-final url = '$urlBaseGlobal';
+final url = '$urlBaseGlobal' + '/storage';
 
 class WeaponDetailPage extends StatelessWidget {
   final Weapon weapon;

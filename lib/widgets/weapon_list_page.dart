@@ -9,7 +9,7 @@ class WeaponListPage extends StatefulWidget {
   _WeaponListPageState createState() => _WeaponListPageState();
 }
 
-final url = '$urlBaseGlobal';
+final url = '$urlBaseGlobal' + '/storage';
 
 class _WeaponListPageState extends State<WeaponListPage> {
   final ApiService apiService = ApiService();

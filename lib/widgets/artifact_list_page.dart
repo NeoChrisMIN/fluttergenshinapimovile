@@ -9,7 +9,7 @@ class ArtifactListPage extends StatefulWidget {
   _ArtifactListPageState createState() => _ArtifactListPageState();
 }
 
-final url = '$urlBaseGlobal';
+final url = '$urlBaseGlobal' + '/storage';
 
 class _ArtifactListPageState extends State<ArtifactListPage> {
   final ApiService apiService = ApiService();

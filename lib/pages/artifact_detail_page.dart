@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/artifact_model.dart';
 import '../utils/utils.dart';
 
-final url = '$urlBaseGlobal';
+final url = '$urlBaseGlobal' + '/storage';
 
 class ArtifactDetailPage extends StatelessWidget {
   final Artifact artifact;
