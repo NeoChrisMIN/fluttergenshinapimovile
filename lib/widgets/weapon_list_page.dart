@@ -62,6 +62,7 @@ class _WeaponListPageState extends State<WeaponListPage> {
       final newWeapons = await apiService.fetchWeaponsPaginated(
         page: currentPage,
         perPage: 10,
+        query: searchQuery,
       );
       setState(() {
         weapons.addAll(newWeapons);
@@ -79,6 +80,7 @@ class _WeaponListPageState extends State<WeaponListPage> {
       });
     }
   }
+
 
   void _onScroll() {
     if (_scrollController.position.pixels ==

@@ -115,13 +115,15 @@ class ApiService {
     }
   }
 
-  //Obtener armas paginadas
+  // Obtener armas paginadas con búsqueda
   Future<List<Weapon>> fetchWeaponsPaginated({
     int page = 1,
     int perPage = 10,
+    String query = '',
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/weapons/paginate?page=$page&per_page=$perPage'),
+      Uri.parse(
+          '$baseUrl/weapons/paginate?page=$page&per_page=$perPage&search=$query'),
     );
 
     if (response.statusCode == 200) {
