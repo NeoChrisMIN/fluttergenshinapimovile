@@ -172,9 +172,23 @@ class _CharacterListState extends State<CharacterList> {
                                             width: 50,
                                             height: 50,
                                             fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              // Usamos la imagen predeterminada en caso de error al cargar desde la red
+                                              return Image.asset(
+                                                'images/paimonDefault.png',
+                                                width: 50,
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
                                           )
-                                        : const Icon(Icons.image_not_supported,
-                                            color: Colors.grey),
+                                        : Image.asset(
+                                            'images/paimonDefault.png',
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                   title: Text(
                                     character.name,

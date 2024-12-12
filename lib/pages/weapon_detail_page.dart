@@ -53,10 +53,11 @@ class WeaponDetailPage extends StatelessWidget {
                         : null,
                   ),
                   child: weapon.image == null
-                      ? const Icon(
-                          Icons.image_not_supported,
-                          size: 80,
-                          color: Colors.white54,
+                      ? Image.asset(
+                          'images/paimonDefault.png',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
                         )
                       : null,
                 ),

@@ -81,7 +81,6 @@ class _WeaponListPageState extends State<WeaponListPage> {
     }
   }
 
-
   void _onScroll() {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
@@ -171,10 +170,21 @@ class _WeaponListPageState extends State<WeaponListPage> {
                                           width: 50,
                                           height: 50,
                                           fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                              'images/paimonDefault.png',
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
                                         )
-                                      : const Icon(
-                                          Icons.image_not_supported,
-                                          color: Colors.grey,
+                                      : Image.asset(
+                                          'images/paimonDefault.png',
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
                                         ),
                                 ),
                                 title: Text(

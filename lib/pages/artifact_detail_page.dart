@@ -44,10 +44,11 @@ class ArtifactDetailPage extends StatelessWidget {
                       ? NetworkImage(url + artifact.imagePath!)
                       : null,
                   child: artifact.imagePath == null
-                      ? const Icon(
-                          Icons.image_not_supported,
-                          size: 80,
-                          color: Colors.white54,
+                      ? Image.asset(
+                          'images/Icon_Paimon_Menu.png',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
                         )
                       : null,
                 ),

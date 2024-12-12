@@ -79,6 +79,7 @@ flutter:
      - images/Icon_Paimon_Menu.png
      - images/System_Battle_Pass.png
      - images/fondo.png
+     - images/paimonDefault.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

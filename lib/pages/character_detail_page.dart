@@ -43,12 +43,17 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // Imagen de fondo
+          // Imagen de fondo (card)
           Positioned.fill(
-            child: Image.network(
-              url + characterData.card,
-              fit: BoxFit.cover,
-            ),
+            child: characterData.card != null && characterData.card.isNotEmpty
+                ? Image.network(
+                    url + characterData.card,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    'images/fondo.png', // Imagen predeterminada para el fondo
+                    fit: BoxFit.cover,
+                  ),
           ),
           // Superposición oscura para legibilidad
           Positioned.fill(
@@ -94,9 +99,14 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                    url + characterData.iconBig,
-                                  ),
+                                  image: characterData.iconBig != null &&
+                                          characterData.iconBig.isNotEmpty
+                                      ? NetworkImage(
+                                          url + characterData.iconBig,
+                                        )
+                                      : const AssetImage(
+                                          'images/paimonDefault.png',
+                                        ) as ImageProvider,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -232,9 +242,11 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
                   height: 50,
                   fit: BoxFit.cover,
                 )
-              : const Icon(
-                  Icons.image_not_supported,
-                  color: Colors.grey,
+              : Image.asset(
+                  'images/paimonDefault.png',
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
                 ),
           title: Text(
             artifact.name,
@@ -355,6 +367,10 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
             child: Image.network(
               url + character.iconBig,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Image.asset(
+                'images/paimonDefault.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

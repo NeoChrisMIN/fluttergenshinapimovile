@@ -172,9 +172,22 @@ class _ArtifactListPageState extends State<ArtifactListPage> {
                                             width: 50,
                                             height: 50,
                                             fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.asset(
+                                                'images/paimonDefault.png',
+                                                width: 50,
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
                                           )
-                                        : const Icon(Icons.image_not_supported,
-                                            color: Colors.grey),
+                                        : Image.asset(
+                                            'images/paimonDefault.png',
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                   title: Text(
                                     artifact.name,
