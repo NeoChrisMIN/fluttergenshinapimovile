@@ -1,2 +1,2 @@
-const urlBaseGlobal =
-    "http://192.168.100.216:80"; //"http://192.168.100.216:80"; //"http://10.0.2.2:80";
+const urlBaseGlobal = "http://192.168.100.216:80";
+    //"https://charismatic-fulfillment-production.up.railway.app"; //"http://192.168.100.216:80"; //"http://10.0.2.2:80";
