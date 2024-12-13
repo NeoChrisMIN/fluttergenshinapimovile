@@ -72,8 +72,8 @@ class _CharacterListState extends State<CharacterList> {
         }
       });
     } catch (error) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al conectar con la base de datos')));
     } finally {
       setState(() {
         isLoading = false;

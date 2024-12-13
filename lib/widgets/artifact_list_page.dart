@@ -73,7 +73,7 @@ class _ArtifactListPageState extends State<ArtifactListPage> {
       });
     } catch (error) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $error')));
+          .showSnackBar(SnackBar(content: Text('Error al conectar con la base de datos')));
     } finally {
       setState(() {
         isLoading = false;

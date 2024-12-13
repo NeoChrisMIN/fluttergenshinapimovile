@@ -72,8 +72,8 @@ class _WeaponListPageState extends State<WeaponListPage> {
         }
       });
     } catch (error) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al conectar con la base de datos')));
     } finally {
       setState(() {
         isLoading = false;
