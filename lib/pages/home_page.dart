@@ -38,20 +38,7 @@ class _HomePageState extends State<HomePage> {
     switch (_selectedIndex) {
       case 0:
         appBarTitle = 'Character Database';
-        currentPage = FutureBuilder<List<Character>>(
-          future: futureCharacters,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}"));
-            } else if (snapshot.hasData) {
-              return CharacterList();
-            } else {
-              return const Center(child: Text("No se encontraron personajes"));
-            }
-          },
-        );
+        currentPage = CharacterList();
         break;
       case 1:
         appBarTitle = 'Artifact Database';
